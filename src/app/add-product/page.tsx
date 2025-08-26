@@ -1,3 +1,4 @@
+import FormSubmitButton from "@/components/FormSubmitButton";
 import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 
@@ -28,7 +29,7 @@ export default function AddProductPage() {
   return (
     <div className="flex flex-col">
       <h1 className="text-2xl m-3 font-bold">Agregar producto</h1>
-      <form className="flex flex-col gap-5">
+      <form className="flex flex-col gap-5" action={addProduct}>
         <input
           required
           name="name"
@@ -55,9 +56,9 @@ export default function AddProductPage() {
           type="number"
           className="input input-bordered w-full"
         />
-        <button type="submit" className="btn btn-primary btn-block">
+        <FormSubmitButton className="btn-block">
           Agregar
-        </button>
+        </FormSubmitButton>
       </form>
     </div>
   );
