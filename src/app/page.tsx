@@ -1,58 +1,39 @@
+import ProductCard from "@/components/ProductCard";
+import { prisma } from "@/lib/db/prisma";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const products = await prisma.product.findMany({
+    orderBy: { id: "desc" },
+  });
   return (
-    <div
-      className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
-    >
-      <main className="flex flex-col">
-        <h1 className="text-3xl font-bold">Página de E-commerce</h1>
-      </main>
-
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/add-product"
-          rel="noopener noreferrer"
-        >
+    <div>
+      <div className="hero bg-base-200 rounded-xl">
+        <div className="hero-content flex-col lg:flex-row">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={products[0].imageUrl}
+            alt={products[0].name}
+            width={400}
+            height={800}
+            className="w-full max-w-sm rounded-lg shadow-2xl"
+            priority
           />
-          Agregar Producto
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/cart"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Ver Carrito
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="/about"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Sobre Nosotros
-        </a>
-      </footer>
+          <div>
+            <h1 className="text-5xl font-bold">{products[0].name}</h1>
+            <p className="py-6">{products[0].description}</p>
+            <Link
+              href={"/products/" + products[0].id}
+              className="btn btn-primary"
+            >LO QUIERO</Link>
+          </div>
+        </div>
+      </div>
+      <div className="my-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {products.slice(1).map(product => (
+            <ProductCard product={product} key={product.id} />
+          ))}
+        </div>
     </div>
   );
 }
